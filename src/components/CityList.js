@@ -9,8 +9,6 @@ export default function CityList({ $app, initialState, handleLoadMore }) {
   this.template = () => {
     let temp = `<div class="city-items-container">`;
 
-    console.log(this.state);
-
     if (this.state) {
       this.state.cities.forEach((city) => {
         temp += `
