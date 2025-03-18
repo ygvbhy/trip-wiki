@@ -2,7 +2,7 @@ import Header from "./components/Header.js";
 import RegionList from "./components/RegionList.js";
 import CityList from "./components/CityList.js";
 import CityDetail from "./components/CityDetail.js";
-import { request } from "./components/api.js";
+import { request, requestCityDetail } from "./components/api.js";
 
 export default function App($app) {
   // 주소창에 검색 파라미터가 있는 경우 해당 부분 뽑아서 state 에 설정
@@ -34,6 +34,7 @@ export default function App($app) {
       initialState: {
         sortBy: this.state.sortBy,
         searchWord: this.state.searchWord,
+        currentPage: this.state.currentPage,
       },
       // 정렬 기준 바뀌면 리스트 새롭게 불러오기
       handleSortChange: async (sortBy) => {
@@ -125,7 +126,17 @@ export default function App($app) {
         });
       },
     });
-  const renderCityDetail = () => new CityDetail();
+  const renderCityDetail = async (cityId) => {
+    try {
+      const cityDetailData = await requestCityDetail(cityId);
+      new CityDetail({
+        $app,
+        initialState: cityDetailData,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   this.setState = (newState) => {
     this.state = newState;
@@ -136,8 +147,9 @@ export default function App($app) {
     const path = this.state.currentPage;
     $app.innerHTML = "";
     if (path.startsWith("/city/")) {
+      const cityId = path.split("/city/")[1];
       renderHeader();
-      renderCityDetail();
+      renderCityDetail(cityId);
     } else {
       renderHeader();
       renderRegionList();
