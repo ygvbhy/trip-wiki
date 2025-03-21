@@ -146,12 +146,11 @@ export default function App($app) {
   const render = () => {
     const path = this.state.currentPage;
     $app.innerHTML = "";
+    renderHeader();
     if (path.startsWith("/city/")) {
       const cityId = path.split("/city/")[1];
-      renderHeader();
       renderCityDetail(cityId);
     } else {
-      renderHeader();
       renderRegionList();
       renderCityList();
     }
